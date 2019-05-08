@@ -4,4 +4,4 @@ Fabio works on the RHI.
 
 Steve works on the maths, the resources (Resource, ResourceManagement, Loader), the scenegraph, the component system and the CustomMonoBehavior.
 
-I work on the phyic, the fenestration, the engine class, the scenegraph, the components, the prototypes.
+I work on the phyic, the fenestration, the engine class, the scenegraph, the "specialised" components(physic, lights, rendering), the prototypes.
