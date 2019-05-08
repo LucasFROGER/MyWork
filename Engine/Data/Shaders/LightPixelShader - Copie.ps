@@ -1,0 +1,62 @@
+Texture2D diffuseMap : register(t0);
+SamplerState sampleWrap : register(s0);
+
+#define NUM_LIGHTS 5
+
+struct VS_OUTPUT
+{
+	float4 wvpPos : SV_POSITION; // camera pos;
+	float3 normal : NORMAL;
+	float2 texCoord: UV;
+	float3 tangent : TANGENT;
+	float4 wPos : POSITION; // lighting pos;
+};
+
+struct LightData
+{
+	float4 light;
+	float4 color;
+	float intensity;
+	bool used;
+	float4x4 view;
+	float4x4 projection;
+};
+
+cbuffer LightConstantBuffer : register(b1)
+{
+	LightData lights[NUM_LIGHTS];	
+	float4 ambientColor;
+	bool sampleShadowMap;
+};
+
+
+
+
+
+
+
+
+
+float4 main(VS_OUTPUT input) : SV_TARGET
+{
+	float4 diffuseColor = diffuseMap.Sample(sampleWrap, input.texCoord);
+	float4 totalLight = ambientColor;
+	float3 N = normalize(input.normal);
+	float3 P = input.wPos;
+
+	for (int i = 0; i < NUM_LIGHTS; i++)
+	{
+		if(lights[i].used)
+		{
+			float3 L = float3(lights[i].light.xyz);
+			if (lights[i].light.w > 0) 
+			{
+				// Positionnel (point light ou spot light)
+				L = normalize(lights[i].light.xyz - P);
+			}
+			float diffuseFactor = max(dot(N, L), 0.0); 
+			totalLight += lights[i].color * diffuseFactor * (lights[i].intensity / 10.0f);
+		}
+	}
+	return diffuseColor * saturate(totalLight);
+}
