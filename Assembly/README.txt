@@ -1,0 +1,1 @@
+Small project to discover the MASM and the possible interaction with C++, and some performance tests (not very revelant).
